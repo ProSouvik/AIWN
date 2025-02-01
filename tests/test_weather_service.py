@@ -67,4 +67,18 @@ def test_get_forecast(mocker):
     
     assert isinstance(result, list)
     assert isinstance(result[0], ForecastData)
-    assert result[0].temperature == 22.5 
+    assert result[0].temperature == 22.5
+
+def test_api_error_handling(mocker):
+    # Mock failed API response
+    mock_response = mocker.Mock()
+    mock_response.status_code = 401
+    mock_response.json.return_value = {"message": "Invalid API key"}
+    
+    mocker.patch('requests.get', return_value=mock_response)
+    
+    weather_service = WeatherService("invalid_api_key")
+    with pytest.raises(Exception) as exc_info:
+        weather_service.get_current_weather("London")
+    
+    assert "Failed to fetch weather data" in str(exc_info.value) 

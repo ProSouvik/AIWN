@@ -11,6 +11,8 @@ class WeatherData:
     description: str
     icon: str
     city: str
+    lat: float = 51.5074  # Default to London
+    lon: float = -0.1278
     
     @classmethod
     def from_api_response(cls, data: dict) -> 'WeatherData':
@@ -21,7 +23,9 @@ class WeatherData:
             wind_speed=data['wind']['speed'],
             description=data['weather'][0]['description'],
             icon=data['weather'][0]['icon'],
-            city=data['name']
+            city=data['name'],
+            lat=data['coord']['lat'],
+            lon=data['coord']['lon']
         )
 
 @dataclass

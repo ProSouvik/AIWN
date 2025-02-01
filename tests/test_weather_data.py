@@ -1,21 +1,53 @@
 import pytest
-from src.models.weather_data import WeatherData
+from src.models.weather_data import WeatherData, ForecastData
+from datetime import datetime
 
 def test_weather_data_creation():
-    sample_api_response = {
+    data = {
         'main': {
             'temp': 20.5,
-            'humidity': 65,
-            'feels_like': 21.0
+            'humidity': 65
         },
-        'weather': [{'description': 'clear sky', 'icon': '01d'}],
-        'name': 'London',
-        'sys': {'country': 'GB'},
-        'wind': {'speed': 5.2}
+        'wind': {
+            'speed': 5.2
+        },
+        'weather': [{
+            'description': 'clear sky',
+            'icon': '01d'
+        }],
+        'name': 'London'
     }
     
-    weather_data = WeatherData.from_api_response(sample_api_response)
+    weather = WeatherData.from_api_response(data)
     
-    assert weather_data.temperature == 20.5
-    assert weather_data.humidity == 65
-    assert weather_data.city == 'London' 
+    assert weather.temperature == 20.5
+    assert weather.humidity == 65
+    assert weather.wind_speed == 5.2
+    assert weather.description == 'clear sky'
+    assert weather.icon == '01d'
+    assert weather.city == 'London'
+
+def test_forecast_data_creation():
+    data = {
+        'main': {
+            'temp': 22.5,
+            'humidity': 70
+        },
+        'wind': {
+            'speed': 4.8
+        },
+        'weather': [{
+            'description': 'scattered clouds',
+            'icon': '03d'
+        }],
+        'dt': 1625097600
+    }
+    
+    forecast = ForecastData.from_api_response(data)
+    
+    assert forecast.temperature == 22.5
+    assert forecast.humidity == 70
+    assert forecast.wind_speed == 4.8
+    assert forecast.description == 'scattered clouds'
+    assert forecast.icon == '03d'
+    assert isinstance(forecast.datetime, datetime) 

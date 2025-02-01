@@ -1,16 +1,16 @@
 import streamlit as st
-from src.services.weather_service import WeatherService
+from src.api.weather_service import WeatherService
+from src.config.settings import Settings
 from src.ui.weather_ui import WeatherUI
 
 def main():
-    # Initialize services
-    weather_service = WeatherService()
+    # Initialize settings and services
+    settings = Settings()
+    weather_service = WeatherService(settings.OPENWEATHER_API_KEY)
     
-    # Initialize UI
-    weather_ui = WeatherUI(weather_service)
-    
-    # Render UI
-    weather_ui.render()
+    # Initialize and render UI
+    ui = WeatherUI(weather_service)
+    ui.render()
 
 if __name__ == "__main__":
     main() 
